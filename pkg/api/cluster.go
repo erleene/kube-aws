@@ -43,6 +43,9 @@ func NewDefaultCluster() *Cluster {
 			OwnerReferencesPermissionEnforcement{
 				Enabled: false,
 			},
+			PersistentVolumeClaimResize{
+				Enabled: false,
+			},
 		},
 		AuditLog: AuditLog{
 			Enabled:   false,

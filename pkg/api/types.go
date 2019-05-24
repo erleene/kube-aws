@@ -57,6 +57,7 @@ type Admission struct {
 	AlwaysPullImages                     AlwaysPullImages                     `yaml:"alwaysPullImages"`
 	Initializers                         Initializers                         `yaml:"initializers"`
 	OwnerReferencesPermissionEnforcement OwnerReferencesPermissionEnforcement `yaml:"ownerReferencesPermissionEnforcement"`
+	PersistentVolumeClaimResize          PersistentVolumeClaimResize          `yaml:"persistentVolumeClaimResize"`
 }
 
 type AlwaysPullImages struct {
