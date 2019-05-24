@@ -3353,7 +3353,7 @@ write_files:
           {{- else }}
           - --apiserver-count={{if .MinControllerCount}}{{ .MinControllerCount }}{{else}}{{ .Controller.Count }}{{end}}
           {{- end }}
-          - --enable-admission-plugins=EventRateLimit,ExtendedResourceToleration,NodeRestriction,PodSecurityPolicy{{if .Experimental.Admission.AlwaysPullImages.Enabled}},AlwaysPullImages{{ end }}{{if .Experimental.Admission.Initializers.Enabled}},Initializers{{end}}
+          - --enable-admission-plugins=EventRateLimit,ExtendedResourceToleration,NodeRestriction,PodSecurityPolicy{{if .Experimental.Admission.AlwaysPullImages.Enabled}},AlwaysPullImages{{ end }}{{if .Experimental.Admission.Initializers.Enabled}},Initializers{{end}}{{if .Experimental.Admission.PersistentVolumeClaimResize.Enabled}},PersistentVolumeClaimResize{{ end }}
           - --admission-control-config-file=/etc/kubernetes/auth/admission-control-config.yaml
           - --bind-address=0.0.0.0
           - --etcd-servers=#ETCD_ENDPOINTS#
@@ -3407,6 +3407,9 @@ write_files:
           - --runtime-config=extensions/v1beta1/networkpolicies=true,extensions/v1beta1/podsecuritypolicy=true{{if .Experimental.Admission.Initializers.Enabled}},admissionregistration.k8s.io/v1alpha1{{end}}
           {{- if .ControllerFeatureGates.Enabled }}
           - --feature-gates={{.ControllerFeatureGates.String}}
+          {{- end }}
+          {{- if .Experimental.Admission.PersistentVolumeClaimResize.Enabled }}
+          - --feature-gates=ExpandPersistentVolumes=true
           {{- end }}
           - --cloud-provider=aws
           {{ if .Addons.APIServerAggregator.Enabled -}}
@@ -3575,6 +3578,9 @@ write_files:
           {{ if .ControllerFeatureGates.Enabled -}}
           - --feature-gates={{.ControllerFeatureGates.String}}
           {{ end -}}
+          {{- if .Experimental.Admission.PersistentVolumeClaimResize.Enabled }}
+          - --feature-gates=ExpandPersistentVolumes=true
+          {{- end }}
           resources:
             requests:
               cpu: {{ if .Kubernetes.ControllerManager.ComputeResources.Requests.Cpu }}{{ .Kubernetes.ControllerManager.ComputeResources.Requests.Cpu }}{{ else }}100m{{ end }}
